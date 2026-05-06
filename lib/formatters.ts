@@ -20,3 +20,26 @@ export function formatXLM(amount: string): string {
   if (isNaN(num)) return amount;
   return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
 }
+
+export function formatOperationType(type: string): string {
+  return type
+    .split("_")
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+const opColors: Record<string, string> = {
+  payment: "text-green-400",
+  create_account: "text-blue-400",
+  path_payment_strict_send: "text-purple-400",
+  path_payment_strict_receive: "text-purple-400",
+  manage_sell_offer: "text-amber-400",
+  manage_buy_offer: "text-amber-400",
+  change_trust: "text-cyan-400",
+  invoke_host_function: "text-pink-400",
+  set_options: "text-slate-400",
+};
+
+export function getOperationColor(type: string): string {
+  return opColors[type] ?? "text-slate-400";
+}
