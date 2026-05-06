@@ -55,8 +55,9 @@ export default function GraphQLPage() {
           <div className="flex-1 flex flex-col rounded-xl bg-[#0c1222] border border-[#162032] overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#162032]">
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Query Editor</span>
-              <button onClick={runQuery} className="flex items-center gap-2 px-4 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white text-sm font-semibold rounded-lg transition-colors">
+              <button onClick={runQuery} className="flex items-center gap-2 px-4 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white text-sm font-semibold rounded-lg transition-colors" title="Run Query (Ctrl+Enter)">
                 <Play size={13} /> Run Query
+                <kbd className="text-xs opacity-60 border border-white/20 rounded px-1">⌘↵</kbd>
               </button>
             </div>
             <textarea value={query} onChange={e => setQuery(e.target.value)}
