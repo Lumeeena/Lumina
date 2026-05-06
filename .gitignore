@@ -4,16 +4,20 @@ node_modules/
 .env.local
 .env*.local
 
-# Next.js build
+# Next.js build output
+.next/
 frontend/.next/
 frontend/out/
+next-env.d.ts
+frontend/next-env.d.ts
 
-# Rust
+# Rust/Soroban build
 contracts/target/
 
-# TypeScript
+# TypeScript compiled output
 dist/
 *.js.map
 
 # OS
 .DS_Store
+Thumbs.db
