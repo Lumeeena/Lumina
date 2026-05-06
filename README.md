@@ -102,3 +102,46 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The dashboard loads live Stellar mainnet data immediately.
+
+---
+
+## API Reference
+
+### `getRecentTransactions(limit?)`
+
+Fetches the most recent transactions from Stellar Mainnet.
+
+```typescript
+import { getRecentTransactions } from '@/lib/horizon';
+const txs = await getRecentTransactions(20);
+// Returns: HorizonTransaction[]
+```
+
+### `getAccount(address)`
+
+Fetches full account details including balances, flags, and thresholds.
+
+```typescript
+import { getAccount } from '@/lib/horizon';
+const account = await getAccount('GABC...1234');
+// Returns: HorizonAccount | null
+```
+
+### `getAccountTransactions(address, limit?)`
+
+```typescript
+const txs = await getAccountTransactions('GABC...1234', 10);
+```
+
+### `getAccountOperations(address, limit?)`
+
+```typescript
+const ops = await getAccountOperations('GABC...1234', 10);
+```
+
+### `getLatestLedger()`
+
+```typescript
+const ledger = await getLatestLedger();
+// { sequence, closed_at, transaction_count, operation_count }
+```
