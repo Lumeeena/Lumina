@@ -16,7 +16,8 @@ export default function TransactionRow({ tx }: { tx: HorizonTransaction }) {
           href={`https://stellar.expert/explorer/public/tx/${tx.hash}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mono text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+          className="mono text-xs text-cyan-400 hover:text-cyan-300 hover:underline transition-colors"
+          title={tx.hash}
         >
           {truncateAddress(tx.hash, 6)}
         </a>
