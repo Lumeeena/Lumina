@@ -16,7 +16,7 @@ export default function TransactionsPage() {
   const filtered = filter === "all" ? txs : txs.filter(t => (filter === "successful") === t.successful);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <h1 className="text-3xl font-bold text-white mb-2">Transactions</h1>
       <p className="text-slate-400 mb-8">Recent transactions on the Stellar network, sourced live from Horizon.</p>
 
