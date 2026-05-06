@@ -10,9 +10,9 @@ export default function Navbar() {
           Lumina
         </Link>
         <div className="flex items-center gap-6 text-sm text-slate-400">
-          <Link href="/explorer" className="hover:text-slate-200 transition-colors">Explorer</Link>
-          <Link href="/transactions" className="hover:text-slate-200 transition-colors">Transactions</Link>
-          <Link href="/graphql" className="hover:text-slate-200 transition-colors">GraphQL</Link>
+          <Link href="/explorer" className="hover:text-slate-200 hover:underline underline-offset-4 transition-colors">Explorer</Link>
+          <Link href="/transactions" className="hover:text-slate-200 hover:underline underline-offset-4 transition-colors">Transactions</Link>
+          <Link href="/graphql" className="hover:text-slate-200 hover:underline underline-offset-4 transition-colors">GraphQL</Link>
           <span className="px-2.5 py-1 rounded-full bg-cyan-900/30 border border-cyan-700/50 text-cyan-400 text-xs font-semibold">
             Stellar Mainnet
           </span>
