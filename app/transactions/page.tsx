@@ -58,7 +58,9 @@ export default function TransactionsPage() {
       </div>
 
       {!loading && filtered.length === 0 && (
-        <div className="mt-4 text-center text-slate-500 text-sm">No transactions match this filter.</div>
+        <div className="mt-4 p-8 rounded-xl bg-[#0c1222] border border-[#162032] text-center text-slate-500 text-sm">
+          No {filter !== "all" ? filter : ""} transactions found in the current batch.
+        </div>
       )}
     </div>
   );
