@@ -13,7 +13,7 @@ export default function StatCard({ title, value, subtitle, icon }: StatCardProps
       {icon && <div className="mb-3 text-cyan-400">{icon}</div>}
       <div className="text-2xl font-bold text-white mono">{value}</div>
       <div className="text-sm font-medium text-slate-400 mt-1">{title}</div>
-      {subtitle && <div className="text-xs text-slate-600 mt-0.5">{subtitle}</div>}
+      {subtitle && <div className="text-xs text-slate-500 mt-0.5 leading-snug">{subtitle}</div>}
     </div>
   );
 }
