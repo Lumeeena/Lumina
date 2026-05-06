@@ -24,7 +24,7 @@ export default function ExplorerPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold text-white mb-2">Explorer</h1>
-      <p className="text-slate-400 mb-8">Search accounts and browse recent Stellar network transactions.</p>
+      <p className="text-slate-400 mb-8">Search any Stellar account or browse the last 20 transactions on the network in real time.</p>
 
       {/* Search */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-10">
@@ -66,3 +66,4 @@ export default function ExplorerPage() {
     </div>
   );
 }
+// Horizon API supports cursor-based pagination for loading more transactions
