@@ -4,6 +4,20 @@ import { useState } from "react";
 import { QUERY_EXAMPLES, QueryExample } from "@/lib/queries";
 import { Play } from "lucide-react";
 
+function JsonHighlight({ data }: { data: object }) {
+  const str = JSON.stringify(data, null, 2);
+  const highlighted = str
+    .replace(/("[\w\s]+"):/g, '<span style="color:#67e8f9">$1</span>:')
+    .replace(/:\s*(".*?")/g, ': <span style="color:#86efac">$1</span>')
+    .replace(/:\s*(\d+\.?\d*)/g, ': <span style="color:#fbbf24">$1</span>')
+    .replace(/:\s*(true|false)/g, ': <span style="color:#c084fc">$1</span>')
+    .replace(/:\s*(null)/g, ': <span style="color:#94a3b8">$1</span>');
+  return (
+    <pre className="text-xs leading-relaxed font-mono text-slate-300 whitespace-pre-wrap break-all"
+      dangerouslySetInnerHTML={{ __html: highlighted }} />
+  );
+}
+
 export default function GraphQLPage() {
   const [selected, setSelected] = useState<QueryExample>(QUERY_EXAMPLES[0]);
   const [query, setQuery] = useState(QUERY_EXAMPLES[0].query);
@@ -20,7 +34,10 @@ export default function GraphQLPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold text-white mb-2">GraphQL Playground</h1>
-      <p className="text-slate-400 text-sm mb-8">Lumina GraphQL endpoint: <span className="text-amber-400">Coming soon — testnet deployment in progress</span></p>
+      <div className="flex items-center gap-3 mb-8">
+        <p className="text-slate-400 text-sm">Lumina GraphQL endpoint:</p>
+        <span className="mono text-xs px-2.5 py-1 rounded-full bg-amber-900/30 border border-amber-700/50 text-amber-400">Coming soon — testnet deployment in progress</span>
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-6" style={{ minHeight: "600px" }}>
         <div className="lg:w-64 shrink-0 flex flex-col gap-2">
@@ -52,7 +69,7 @@ export default function GraphQLPage() {
               {result === null ? (
                 <span className="text-slate-600 text-sm">Click &ldquo;Run Query&rdquo; to see the response.</span>
               ) : (
-                <pre className="text-xs text-slate-300 mono whitespace-pre-wrap">{JSON.stringify({ data: result }, null, 2)}</pre>
+                <JsonHighlight data={{ data: result }} />
               )}
             </div>
           </div>
