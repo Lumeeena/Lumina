@@ -63,7 +63,7 @@ export default function AccountPage({ params }: { params: Promise<{ address: str
               <div><div className="text-slate-500 text-xs mb-1">XLM Balance</div><div className="text-white font-semibold">{formatXLM(xlmBalance?.balance ?? "0")} XLM</div></div>
               <div><div className="text-slate-500 text-xs mb-1">Sequence</div><div className="text-white mono text-xs">{account.sequence}</div></div>
               <div><div className="text-slate-500 text-xs mb-1">Subentries</div><div className="text-white">{account.subentry_count}</div></div>
-              <div><div className="text-slate-500 text-xs mb-1">Last Modified</div><div className="text-white mono text-xs">{account.last_modified_ledger.toLocaleString()}</div></div>
+              <div><div className="text-slate-500 text-xs mb-1">Trustlines</div><div className="text-white">{account.balances.filter(b => b.asset_type !== "native").length}</div></div>
             </div>
           </div>
 
