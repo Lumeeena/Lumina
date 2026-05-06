@@ -37,7 +37,7 @@ export default function LiveFeed() {
       </div>
 
       {loading ? (
-        <div className="p-6 text-center text-slate-600 text-sm">Fetching live data from Stellar Horizon...</div>
+        <div className="p-6 text-center text-slate-600 text-sm animate-pulse">Fetching live data from Stellar Horizon...</div>
       ) : txs.length === 0 ? (
         <div className="p-6 text-center text-slate-600 text-sm">No transactions found.</div>
       ) : (
