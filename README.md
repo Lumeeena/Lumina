@@ -145,3 +145,64 @@ const ops = await getAccountOperations('GABC...1234', 10);
 const ledger = await getLatestLedger();
 // { sequence, closed_at, transaction_count, operation_count }
 ```
+
+---
+
+## GraphQL Schema (Planned)
+
+```graphql
+type Query {
+  transactions(limit: Int, order: Order, cursor: String): [Transaction!]!
+  transaction(hash: String!): Transaction
+  account(address: String!): Account
+  operations(account: String, type: OperationType, limit: Int): [Operation!]!
+  events(contractId: String!, limit: Int): [ContractEvent!]!
+}
+
+type Transaction {
+  hash: String!
+  ledger: Int!
+  createdAt: String!
+  sourceAccount: String!
+  operationCount: Int!
+  successful: Boolean!
+  feeCharged: String!
+}
+
+type Account {
+  address: String!
+  sequence: String!
+  subentryCount: Int!
+  balances: [Balance!]!
+  flags: AccountFlags!
+}
+
+type Balance {
+  asset: String!
+  balance: String!
+  limit: String
+}
+
+type ContractEvent {
+  id: String!
+  contractId: String!
+  ledger: Int!
+  createdAt: String!
+  topics: [String!]!
+  value: JSON
+}
+```
+
+---
+
+## Supported Data Types
+
+| Data Type | Status | Source |
+|---|---|---|
+| Transactions | Live | Horizon `/transactions` |
+| Account Balances | Live | Horizon `/accounts/:id` |
+| Account Operations | Live | Horizon `/accounts/:id/operations` |
+| Ledger Stats | Live | Horizon `/ledgers` |
+| Soroban Contract Events | Coming Soon | Horizon RPC |
+| GraphQL Server | Coming Soon | Apollo Server |
+| Historical Storage | Coming Soon | PostgreSQL + Galexie |
