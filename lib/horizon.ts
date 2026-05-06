@@ -1,3 +1,4 @@
+// Stellar public Horizon instance — swap for testnet: https://horizon-testnet.stellar.org
 const HORIZON = "https://horizon.stellar.org";
 
 export interface HorizonTransaction {
