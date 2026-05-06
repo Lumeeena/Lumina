@@ -12,7 +12,14 @@ export default function TransactionRow({ tx }: { tx: HorizonTransaction }) {
           : <XCircle size={14} className="text-red-400" />}
       </td>
       <td className="py-3 pr-4">
-        <span className="mono text-xs text-cyan-400">{truncateAddress(tx.hash, 6)}</span>
+        <a
+          href={`https://stellar.expert/explorer/public/tx/${tx.hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mono text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+        >
+          {truncateAddress(tx.hash, 6)}
+        </a>
       </td>
       <td className="py-3 pr-4 mono text-xs text-slate-500">{tx.ledger.toLocaleString()}</td>
       <td className="py-3 pr-4 mono text-xs text-slate-400">{truncateAddress(tx.source_account)}</td>
