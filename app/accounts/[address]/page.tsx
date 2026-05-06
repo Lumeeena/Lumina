@@ -47,7 +47,7 @@ export default function AccountPage({ params }: { params: Promise<{ address: str
       ) : !account ? (
         <div className="p-8 rounded-xl bg-[#0c1222] border border-red-900/50 text-center">
           <p className="text-red-400 font-semibold mb-2">Account Not Found</p>
-          <p className="text-slate-500 text-sm">The address <span className="mono text-slate-300">{address}</span> does not exist on Stellar Mainnet, or has never been funded.</p>
+          <p className="text-slate-500 text-sm max-w-md mx-auto">The address <span className="mono text-slate-300 break-all">{address}</span> does not exist on Stellar Mainnet, or has never been funded.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
