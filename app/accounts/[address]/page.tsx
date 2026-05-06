@@ -37,7 +37,7 @@ export default function AccountPage({ params }: { params: Promise<{ address: str
   const xlmBalance = account?.balances.find(b => b.asset_type === "native");
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <Link href="/explorer" className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-300 mb-8 transition-colors">
         <ArrowLeft size={14} /> Back to Explorer
       </Link>
