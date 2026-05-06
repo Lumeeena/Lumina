@@ -49,7 +49,7 @@ export default function LiveFeed() {
                 href={`https://stellar.expert/explorer/public/tx/${tx.hash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mono text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                className="mono text-xs text-cyan-400 hover:text-cyan-300 hover:underline transition-colors"
               >
                 {truncateAddress(tx.hash, 5)}
               </a>
