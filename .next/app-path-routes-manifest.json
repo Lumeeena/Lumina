@@ -1,0 +1,10 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/accounts/[address]/page": "/accounts/[address]",
+  "/explorer/page": "/explorer",
+  "/favicon.ico/route": "/favicon.ico",
+  "/graphql/page": "/graphql",
+  "/page": "/",
+  "/transactions/page": "/transactions"
+}

@@ -6,63 +6,118 @@
 ![Stellar Ecosystem](https://img.shields.io/badge/ecosystem-Stellar-blue)
 ![Drips Wave](https://img.shields.io/badge/Drips-Wave%20Contributor-green)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-blue)
-![Next.js](https://img.shields.io/badge/framework-Next.js%2016-black)
-![Live Data](https://img.shields.io/badge/data-Stellar%20Mainnet-cyan)
+![Rust](https://img.shields.io/badge/language-Rust-orange)
 
 ---
 
 ## Overview
 
-Lumina is an open-source event indexer and GraphQL data layer for the Stellar network. It fetches real-time data from Stellar Horizon, indexes transactions, operations, account states, and Soroban contract events, and exposes them through a developer-friendly query interface.
+Lumina is an open-source event indexer and GraphQL data layer for the Stellar network. It polls Stellar Horizon for new ledgers, indexes transactions, operations, accounts, and Soroban contract events into PostgreSQL, and serves them via an Apollo GraphQL API — all queryable from a polished Next.js explorer frontend.
 
-Building on Stellar currently requires direct integration with Horizon's REST API — which returns raw JSON that developers must parse, paginate, and transform themselves. Lumina abstracts this complexity. The indexer ingests Horizon event streams, normalizes them into a consistent schema, and exposes them via a GraphQL endpoint that any developer can query with a single request.
-
-Lumina complements Stellar's own data initiatives — including Galexie and the Composable Data Platform — by adding the developer-facing query layer that makes this data usable without infrastructure overhead.
+The **Lumina Registry** is an on-chain Soroban contract that lets any project register their contract address for priority indexing. This creates a decentralized, permissionless index manifest — the Lumina indexer polls the Registry to discover what to index next.
 
 ---
 
-## Features
+## Repository Structure
 
-- **Live transaction feed** — Real-time Stellar mainnet transactions, auto-refreshed every 30 seconds
-- **Account explorer** — Search any Stellar account; view balances, sequence, flags, subentries, and history
-- **Transaction browser** — Browse recent transactions with filter by status (successful/failed)
-- **Operation history** — Per-account operation list with type, timestamp, and visual labels
-- **GraphQL playground** — Interactive query editor with 4 example queries and mock response rendering
-- **Real Horizon integration** — All data fetched live from `https://horizon.stellar.org`
-- **Error states** — Graceful handling of unfunded accounts, Horizon timeouts, and rate limits
-- **Network stats** — Live ledger sequence, transaction count, operation count from the latest ledger
-- **Copy-to-clipboard** — One-click address copying on account detail pages
+```
+lumina/
+├── frontend/              # Next.js explorer UI
+│   ├── app/               # App Router pages
+│   ├── components/        # React components
+│   ├── lib/               # Horizon client + formatters
+│   └── package.json
+│
+├── contracts/             # Soroban smart contracts (Rust)
+│   ├── registry/          # LuminaRegistry — on-chain contract index
+│   │   └── src/lib.rs
+│   └── Cargo.toml
+│
+├── graphql-server/        # Apollo GraphQL API server
+│   ├── src/
+│   │   ├── schema.graphql # Full typed schema
+│   │   ├── resolvers.ts   # Resolver stubs (wired to Horizon; TODO: PostgreSQL)
+│   │   ├── horizon.ts     # Horizon HTTP client (server-side copy)
+│   │   └── index.ts       # Server entrypoint
+│   └── package.json
+│
+├── indexer/               # Stellar Horizon event indexer → PostgreSQL
+│   ├── src/
+│   │   └── index.ts       # Poll loop: new ledgers → transactions → operations → events
+│   └── package.json
+│
+├── db/                    # PostgreSQL schema + migrations
+│   ├── schema.sql         # Tables: ledgers, transactions, operations, accounts, contract_events
+│   └── migrations/
+│       └── 001_init.sql
+│
+├── docker/
+│   └── docker-compose.yml # Runs all 4 services together
+│
+├── .github/
+│   └── workflows/ci.yml   # CI for frontend, graphql-server, indexer, contracts, DB
+│
+└── README.md
+```
 
 ---
 
-## Architecture
+## How It Works
 
 ```
 Stellar Network
-     │
-     ▼
-Horizon REST API (horizon.stellar.org)
-     │  /transactions  /accounts  /operations  /ledgers
-     │
-     ▼
-Lumina Data Layer (lib/horizon.ts)
-     │  getRecentTransactions()
-     │  getAccount()
-     │  getAccountTransactions()
-     │  getAccountOperations()
-     │  getLatestLedger()
-     │
-     ▼
-Next.js Pages
-     │  / (dashboard)         → StatCard + LiveFeed
-     │  /explorer             → search + transaction table
-     │  /transactions         → full transaction browser
-     │  /accounts/[address]   → account detail
-     │  /graphql              → playground
-     │
-     ▼
-Developer / End User
+      │
+      ▼
+Horizon REST API  ←────────────── Soroban RPC (for contract events)
+      │
+      ▼
+┌─────────────────────────────┐
+│   Lumina Indexer (indexer/) │  ← polls every 5 seconds
+│   Ledgers → Transactions    │
+│   Operations → Events       │
+└────────────┬────────────────┘
+             │ writes
+             ▼
+       PostgreSQL (db/)
+             │ reads
+             ▼
+┌─────────────────────────────┐
+│ Apollo GraphQL Server       │  ← graphql-server/
+│ (graphql-server/)           │
+└────────────┬────────────────┘
+             │ serves
+             ▼
+┌─────────────────────────────┐
+│ Next.js Explorer Frontend   │  ← frontend/
+│ Live feed, account search,  │
+│ GraphQL playground          │
+└─────────────────────────────┘
+
+           +
+┌─────────────────────────────┐
+│ Lumina Registry (contracts/)│  ← on Stellar/Soroban
+│ Projects register contracts │
+│ Indexer discovers & indexes │
+└─────────────────────────────┘
 ```
+
+---
+
+## Lumina Registry Contract
+
+The Registry is a Soroban contract that acts as an on-chain manifest of which contracts Lumina indexes. Any project can call `register_contract()` to add their contract to the index.
+
+```rust
+// Register your contract for Lumina indexing
+registry.register_contract(
+    owner,
+    contract_id,
+    "My Protocol",
+    "A DeFi protocol on Stellar"
+)
+```
+
+The Lumina indexer polls `get_contract_count()` and fetches new entries, then begins indexing events from those contracts automatically.
 
 ---
 
@@ -70,180 +125,76 @@ Developer / End User
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 |
-| Icons | Lucide React |
-| Data Source | Stellar Horizon REST API |
-| GraphQL (planned) | Apollo Server |
-| Storage (planned) | PostgreSQL |
+| Frontend | Next.js 16, TypeScript, Tailwind CSS v4 |
+| GraphQL API | Apollo Server 4, TypeScript |
+| Indexer | Node.js, TypeScript, node-fetch |
+| Contracts | Soroban (Rust), soroban-sdk v22 |
+| Database | PostgreSQL 16 |
+| Orchestration | Docker Compose |
+| CI | GitHub Actions |
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
+- Node.js 18+, Rust (stable), Docker + Docker Compose
 
-- Node.js 18 or higher
-- npm, yarn, or pnpm
-
-### Installation
+### Run with Docker (recommended)
 
 ```bash
 git clone https://github.com/Lumeeena/Lumina.git
 cd Lumina
-npm install
+docker compose -f docker/docker-compose.yml up
 ```
 
-### Running Locally
+- Explorer: http://localhost:3000
+- GraphQL: http://localhost:4000/graphql
+- PostgreSQL: localhost:5432
+
+### Run locally (development)
 
 ```bash
-npm run dev
+# Frontend
+cd frontend && npm install && npm run dev
+
+# GraphQL server
+cd graphql-server && npm install && npm run dev
+
+# Indexer
+cd indexer && npm install && npm run dev
+
+# Contracts
+cd contracts && cargo build --target wasm32-unknown-unknown --release
 ```
-
-Open [http://localhost:3000](http://localhost:3000). The dashboard loads live Stellar mainnet data immediately.
-
----
-
-## API Reference
-
-### `getRecentTransactions(limit?)`
-
-Fetches the most recent transactions from Stellar Mainnet.
-
-```typescript
-import { getRecentTransactions } from '@/lib/horizon';
-const txs = await getRecentTransactions(20);
-// Returns: HorizonTransaction[]
-```
-
-### `getAccount(address)`
-
-Fetches full account details including balances, flags, and thresholds.
-
-```typescript
-import { getAccount } from '@/lib/horizon';
-const account = await getAccount('GABC...1234');
-// Returns: HorizonAccount | null
-```
-
-### `getAccountTransactions(address, limit?)`
-
-```typescript
-const txs = await getAccountTransactions('GABC...1234', 10);
-```
-
-### `getAccountOperations(address, limit?)`
-
-```typescript
-const ops = await getAccountOperations('GABC...1234', 10);
-```
-
-### `getLatestLedger()`
-
-```typescript
-const ledger = await getLatestLedger();
-// { sequence, closed_at, transaction_count, operation_count }
-```
-
----
-
-## GraphQL Schema (Planned)
-
-```graphql
-type Query {
-  transactions(limit: Int, order: Order, cursor: String): [Transaction!]!
-  transaction(hash: String!): Transaction
-  account(address: String!): Account
-  operations(account: String, type: OperationType, limit: Int): [Operation!]!
-  events(contractId: String!, limit: Int): [ContractEvent!]!
-}
-
-type Transaction {
-  hash: String!
-  ledger: Int!
-  createdAt: String!
-  sourceAccount: String!
-  operationCount: Int!
-  successful: Boolean!
-  feeCharged: String!
-}
-
-type Account {
-  address: String!
-  sequence: String!
-  subentryCount: Int!
-  balances: [Balance!]!
-  flags: AccountFlags!
-}
-
-type Balance {
-  asset: String!
-  balance: String!
-  limit: String
-}
-
-type ContractEvent {
-  id: String!
-  contractId: String!
-  ledger: Int!
-  createdAt: String!
-  topics: [String!]!
-  value: JSON
-}
-```
-
----
-
-## Supported Data Types
-
-| Data Type | Status | Source |
-|---|---|---|
-| Transactions | Live | Horizon `/transactions` |
-| Account Balances | Live | Horizon `/accounts/:id` |
-| Account Operations | Live | Horizon `/accounts/:id/operations` |
-| Ledger Stats | Live | Horizon `/ledgers` |
-| Soroban Contract Events | Coming Soon | Horizon RPC |
-| GraphQL Server | Coming Soon | Apollo Server |
-| Historical Storage | Coming Soon | PostgreSQL + Galexie |
 
 ---
 
 ## Roadmap
 
-- [ ] Full GraphQL server using Apollo — replace mock responses with live resolvers
-- [ ] Soroban contract event indexing — parse `invoke_host_function` operations
-- [ ] Webhook subscriptions — notify external systems when events occur
-- [ ] PostgreSQL storage — persist indexed events for historical queries
-- [ ] Self-hosted deployment guide — Docker + Compose setup
-- [ ] Custom indexer schemas — define which events to track, like subgraphs
-- [ ] Batch account tracking — monitor multiple addresses simultaneously
-- [ ] DEX analytics — aggregate SDEX trade volume, depth, and price history
-
----
-
-## Drips Wave
-
-Lumina participates in the **Stellar Wave** on [Drips Network](https://www.drips.network/wave) — a recurring monthly open-source contribution sprint sponsored by the Stellar Development Foundation.
-
-**Good first issues for contributors:**
-- Add pagination to the transaction browser
-- Implement the GraphQL server with Apollo
-- Add Soroban contract event display to account pages
-- Write unit tests for `lib/formatters.ts`
-- Add a price ticker showing XLM/USD from the Stellar DEX
-- Improve mobile responsiveness across all pages
+- [ ] Wire GraphQL resolvers to PostgreSQL (replace Horizon fallback)
+- [ ] Implement the indexer poll loop with full DB writes
+- [ ] Soroban contract event indexing via RPC
+- [ ] Deploy Lumina Registry to Stellar testnet
+- [ ] Webhook subscriptions (Server-Sent Events)
+- [ ] Self-hosted deployment guide
+- [ ] Custom indexer schemas (like subgraphs)
 
 ---
 
 ## Contributing
 
-We welcome contributions at all levels. Open a PR or pick up a tagged issue to get started.
+Lumina participates in the **Stellar Wave** on [Drips Network](https://www.drips.network/wave).
+
+Good first issues:
+- Wire a GraphQL resolver to the PostgreSQL `transactions` table
+- Implement one indexer loop iteration (fetch ledger → write to DB)
+- Write Rust tests for the Registry contract
+- Add a `Dockerfile` for each service
+- Add cursor-based pagination to the transactions page
 
 ---
 
 ## License
 
-MIT License — free to use, modify, and distribute.
-
-*Lumina is a community project built for the Stellar ecosystem.*
+MIT — free to use, modify, and distribute.

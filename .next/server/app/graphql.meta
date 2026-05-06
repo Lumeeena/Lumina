@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/graphql/layout,_N_T_/graphql/page,_N_T_/graphql"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/graphql/__PAGE__",
+    "/graphql",
+    "/_index",
+    "/_head"
+  ]
+}
