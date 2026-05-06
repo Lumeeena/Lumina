@@ -14,3 +14,9 @@ export function timeAgo(isoString: string): string {
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
 }
+
+export function formatXLM(amount: string): string {
+  const num = parseFloat(amount);
+  if (isNaN(num)) return amount;
+  return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
+}
