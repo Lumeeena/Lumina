@@ -206,3 +206,44 @@ type ContractEvent {
 | Soroban Contract Events | Coming Soon | Horizon RPC |
 | GraphQL Server | Coming Soon | Apollo Server |
 | Historical Storage | Coming Soon | PostgreSQL + Galexie |
+
+---
+
+## Roadmap
+
+- [ ] Full GraphQL server using Apollo — replace mock responses with live resolvers
+- [ ] Soroban contract event indexing — parse `invoke_host_function` operations
+- [ ] Webhook subscriptions — notify external systems when events occur
+- [ ] PostgreSQL storage — persist indexed events for historical queries
+- [ ] Self-hosted deployment guide — Docker + Compose setup
+- [ ] Custom indexer schemas — define which events to track, like subgraphs
+- [ ] Batch account tracking — monitor multiple addresses simultaneously
+- [ ] DEX analytics — aggregate SDEX trade volume, depth, and price history
+
+---
+
+## Drips Wave
+
+Lumina participates in the **Stellar Wave** on [Drips Network](https://www.drips.network/wave) — a recurring monthly open-source contribution sprint sponsored by the Stellar Development Foundation.
+
+**Good first issues for contributors:**
+- Add pagination to the transaction browser
+- Implement the GraphQL server with Apollo
+- Add Soroban contract event display to account pages
+- Write unit tests for `lib/formatters.ts`
+- Add a price ticker showing XLM/USD from the Stellar DEX
+- Improve mobile responsiveness across all pages
+
+---
+
+## Contributing
+
+We welcome contributions at all levels. Open a PR or pick up a tagged issue to get started.
+
+---
+
+## License
+
+MIT License — free to use, modify, and distribute.
+
+*Lumina is a community project built for the Stellar ecosystem.*
