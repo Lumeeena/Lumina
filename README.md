@@ -63,3 +63,42 @@ Next.js Pages
      ▼
 Developer / End User
 ```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Icons | Lucide React |
+| Data Source | Stellar Horizon REST API |
+| GraphQL (planned) | Apollo Server |
+| Storage (planned) | PostgreSQL |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18 or higher
+- npm, yarn, or pnpm
+
+### Installation
+
+```bash
+git clone https://github.com/Lumeeena/Lumina.git
+cd Lumina
+npm install
+```
+
+### Running Locally
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). The dashboard loads live Stellar mainnet data immediately.
