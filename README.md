@@ -4,7 +4,6 @@
 
 ![License](https://img.shields.io/badge/license-MIT-cyan)
 ![Stellar Ecosystem](https://img.shields.io/badge/ecosystem-Stellar-blue)
-![Drips Wave](https://img.shields.io/badge/Drips-Wave%20Contributor-green)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-blue)
 ![Rust](https://img.shields.io/badge/language-Rust-orange)
 
@@ -184,7 +183,7 @@ cd contracts && cargo build --target wasm32-unknown-unknown --release
 
 ## Contributing
 
-Lumina participates in the **Stellar Wave** on [Drips Network](https://www.drips.network/wave).
+We welcome contributions across all layers — frontend, contracts, GraphQL server, indexer, and database. See [CONTRIBUTING.md](./CONTRIBUTING.md) for a full guide.
 
 Good first issues:
 - Wire a GraphQL resolver to the PostgreSQL `transactions` table
