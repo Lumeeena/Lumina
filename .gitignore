@@ -13,6 +13,7 @@ frontend/next-env.d.ts
 
 # Rust/Soroban build
 contracts/target/
+contracts/**/test_snapshots/
 
 # TypeScript compiled output
 dist/
