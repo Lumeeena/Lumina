@@ -18,6 +18,7 @@ contracts/**/test_snapshots/
 # TypeScript compiled output
 dist/
 *.js.map
+*.tsbuildinfo
 
 # OS
 .DS_Store
