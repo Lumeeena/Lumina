@@ -4,13 +4,12 @@
   "private": true,
   "description": "Open-source event indexer and GraphQL data layer for the Stellar network",
   "workspaces": [
-    "frontend",
     "graphql-server",
     "indexer"
   ],
   "scripts": {
     "dev": "cd frontend && npm run dev",
-    "build": "npm run build --workspace=frontend && npm run build --workspace=graphql-server && npm run build --workspace=indexer",
+    "build": "npm run build:frontend && npm run build:graphql && npm run build:indexer",
     "build:frontend": "cd frontend && npm run build",
     "build:graphql": "cd graphql-server && npm run build",
     "build:indexer": "cd indexer && npm run build",
